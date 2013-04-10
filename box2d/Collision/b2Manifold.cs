@@ -69,58 +69,58 @@ namespace Box2D.Collision
             {
                 return;
             }
-            
+
             switch (manifold.type)
             {
-            case b2ManifoldType.e_circles:
-            {
-                normal.Set(1.0f, 0.0f);
-                b2Vec2 pointA = b2Math.b2Mul(xfA, manifold.localPoint);
-                b2Vec2 pointB = b2Math.b2Mul(xfB, manifold.points[0].localPoint);
-                if (b2Math.b2DistanceSquared(pointA, pointB) > b2Settings.b2_epsilonSqrd)
-                {
-                    normal = pointB - pointA;
-                    normal.Normalize();
-                }
-                
-                b2Vec2 cA = pointA + radiusA * normal;
-                b2Vec2 cB = pointB - radiusB * normal;
-                points[0] = 0.5f * (cA + cB);
-            }
-                break;
-                
-            case b2ManifoldType.e_faceA:
-            {
-                normal = b2Math.b2Mul(xfA.q, manifold.localNormal);
-                b2Vec2 planePoint = b2Math.b2Mul(xfA, manifold.localPoint);
-                
-                for (int i = 0; i < manifold.pointCount; ++i)
-                {
-                    b2Vec2 clipPoint = b2Math.b2Mul(xfB, manifold.points[i].localPoint);
-                    b2Vec2 cA = clipPoint + (radiusA - b2Math.b2Dot(clipPoint - planePoint, normal)) * normal;
-                    b2Vec2 cB = clipPoint - radiusB * normal;
-                    points[i] = 0.5f * (cA + cB);
-                }
-            }
-                break;
-                
-            case b2ManifoldType.e_faceB:
-            {
-                normal = b2Math.b2Mul(xfB.q, manifold.localNormal);
-                b2Vec2 planePoint = b2Math.b2Mul(xfB, manifold.localPoint);
-                
-                for (int i = 0; i < manifold.pointCount; ++i)
-                {
-                    b2Vec2 clipPoint = b2Math.b2Mul(xfA, manifold.points[i].localPoint);
-                    b2Vec2 cB = clipPoint + (radiusB - b2Math.b2Dot(clipPoint - planePoint, normal)) * normal;
-                    b2Vec2 cA = clipPoint - radiusA * normal;
-                    points[i] = 0.5f * (cA + cB);
-                }
-                
-                // Ensure normal points from A to B.
-                normal = -normal;
-            }
-                break;
+                case b2ManifoldType.e_circles:
+                    {
+                        normal.Set(1.0f, 0.0f);
+                        b2Vec2 pointA = b2Math.b2Mul(xfA, manifold.localPoint);
+                        b2Vec2 pointB = b2Math.b2Mul(xfB, manifold.points[0].localPoint);
+                        if (b2Math.b2DistanceSquared(pointA, pointB) > b2Settings.b2_epsilonSqrd)
+                        {
+                            normal = pointB - pointA;
+                            normal.Normalize();
+                        }
+
+                        b2Vec2 cA = pointA + radiusA * normal;
+                        b2Vec2 cB = pointB - radiusB * normal;
+                        points[0] = 0.5f * (cA + cB);
+                    }
+                    break;
+
+                case b2ManifoldType.e_faceA:
+                    {
+                        normal = b2Math.b2Mul(xfA.q, manifold.localNormal);
+                        b2Vec2 planePoint = b2Math.b2Mul(xfA, manifold.localPoint);
+
+                        for (int i = 0; i < manifold.pointCount; ++i)
+                        {
+                            b2Vec2 clipPoint = b2Math.b2Mul(xfB, manifold.points[i].localPoint);
+                            b2Vec2 cA = clipPoint + (radiusA - b2Math.b2Dot(clipPoint - planePoint, normal)) * normal;
+                            b2Vec2 cB = clipPoint - radiusB * normal;
+                            points[i] = 0.5f * (cA + cB);
+                        }
+                    }
+                    break;
+
+                case b2ManifoldType.e_faceB:
+                    {
+                        normal = b2Math.b2Mul(xfB.q, manifold.localNormal);
+                        b2Vec2 planePoint = b2Math.b2Mul(xfB, manifold.localPoint);
+
+                        for (int i = 0; i < manifold.pointCount; ++i)
+                        {
+                            b2Vec2 clipPoint = b2Math.b2Mul(xfA, manifold.points[i].localPoint);
+                            b2Vec2 cB = clipPoint + (radiusB - b2Math.b2Dot(clipPoint - planePoint, normal)) * normal;
+                            b2Vec2 cA = clipPoint - radiusA * normal;
+                            points[i] = 0.5f * (cA + cB);
+                        }
+
+                        // Ensure normal points from A to B.
+                        normal = -normal;
+                    }
+                    break;
             }
         }
 

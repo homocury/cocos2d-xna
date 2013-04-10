@@ -230,8 +230,8 @@ namespace tests
             // Define the dynamic body fixture.
             b2FixtureDef fd = b2FixtureDef.Create();
             fd.shape = dynamicBox;
-            fd.friction = 0.3f;
-            fd.density = 1f;
+            fd.friction = CCMacros.CCRandomBetween0And1();
+            fd.density = CCMacros.CCRandomBetween0And1() * 15f;
             b2Fixture fixture = body.CreateFixture(fd);
 
             sprite.setPhysicsBody(body);

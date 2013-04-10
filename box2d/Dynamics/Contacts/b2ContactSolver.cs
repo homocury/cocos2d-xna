@@ -268,7 +268,7 @@ namespace Box2D.Dynamics.Contacts
                 xfA.p = cA - b2Math.b2Mul(xfA.q, localCenterA);
                 xfB.p = cB - b2Math.b2Mul(xfB.q, localCenterB);
 
-                b2WorldManifold worldManifold = new b2WorldManifold();
+                b2WorldManifold worldManifold =  new b2WorldManifold();
                 worldManifold.Initialize(ref manifold, xfA, radiusA, xfB, radiusB);
 
                 vc.normal = worldManifold.normal;
@@ -688,8 +688,8 @@ namespace Box2D.Dynamics.Contacts
                     }
                     vc.points[0] = cp1;
                     vc.points[1] = cp2;
-                    m_velocityConstraints[i] = vc;
                 }
+                m_velocityConstraints[i] = vc;
 
                 m_velocities[indexA].v = vA;
                 m_velocities[indexA].w = wA;

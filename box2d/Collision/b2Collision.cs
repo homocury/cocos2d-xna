@@ -584,7 +584,7 @@ namespace Box2D.Collision
         /// Determine if two generic shapes overlap.
         public static bool b2TestOverlap(b2Shape shapeA, int indexA,
                              b2Shape shapeB, int indexB,
-                            ref b2Transform xfA, ref b2Transform xfB)
+                             b2Transform xfA, b2Transform xfB)
         {
             b2DistanceInput input = b2DistanceInput.Default;
             input.proxyA = new b2DistanceProxy(shapeA, indexA);

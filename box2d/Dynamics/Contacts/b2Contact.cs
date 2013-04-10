@@ -128,7 +128,7 @@ namespace Box2D.Dynamics.Contacts
         public float Restitution { get { return (m_restitution); } set { m_restitution = value; } }
 
         /// Evaluate this contact with your own manifold and transforms.
-        public abstract void Evaluate(ref b2Manifold manifold, ref b2Transform xfA, ref b2Transform xfB);
+        public abstract void Evaluate(ref b2Manifold manifold, b2Transform xfA, b2Transform xfB);
 
         protected static b2ContactRegister[,] s_registers = new b2ContactRegister[(int)b2ShapeType.e_typeCount, (int)b2ShapeType.e_typeCount];
 
@@ -223,8 +223,9 @@ namespace Box2D.Dynamics.Contacts
         // Note: do not assume the fixture AABBs are overlapping or are valid.
         public virtual void Update(b2ContactListener listener)
         {
-            // TODO: Make this a struct
             b2Manifold oldManifold = m_manifold;
+            oldManifold.points = new b2ManifoldPoint[m_manifold.points.Length];
+            m_manifold.points.CopyTo(oldManifold.points, 0);
 
             // Re-enable this contact.
             m_flags |= b2ContactFlags.e_enabledFlag;
@@ -246,14 +247,14 @@ namespace Box2D.Dynamics.Contacts
             {
                 b2Shape shapeA = m_fixtureA.Shape;
                 b2Shape shapeB = m_fixtureB.Shape;
-                touching = b2Collision.b2TestOverlap(shapeA, m_indexA, shapeB, m_indexB, ref xfA, ref xfB);
+                touching = b2Collision.b2TestOverlap(shapeA, m_indexA, shapeB, m_indexB, xfA, xfB);
 
                 // Sensors don't generate manifolds.
                 m_manifold.pointCount = 0;
             }
             else
             {
-                Evaluate(ref m_manifold, ref xfA, ref xfB);
+                Evaluate(ref m_manifold, xfA, xfB);
                 touching = m_manifold.pointCount > 0;
 
                 // Match old contact ids to new contact ids and copy the
@@ -311,7 +312,7 @@ namespace Box2D.Dynamics.Contacts
             }
         }
 
-        public virtual void GetWorldManifold(b2WorldManifold worldManifold)
+        public virtual void GetWorldManifold(ref b2WorldManifold worldManifold)
         {
             b2Body bodyA = m_fixtureA.Body;
             b2Body bodyB = m_fixtureB.Body;
