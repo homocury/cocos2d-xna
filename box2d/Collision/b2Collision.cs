@@ -53,7 +53,7 @@ namespace Box2D.Collision
         /// Compute the point states given two manifolds. The states pertain to the transition from manifold1
         /// to manifold2. So state1 is either persist or remove while state2 is either add or persist.
         public static void b2GetPointStates(b2PointState[] state1, b2PointState[] state2,
-                              b2Manifold manifold1, b2Manifold manifold2)
+                              ref b2Manifold manifold1, ref b2Manifold manifold2)
         {
             for (int i = 0; i < b2Settings.b2_maxManifoldPoints; ++i)
             {
@@ -97,7 +97,7 @@ namespace Box2D.Collision
         }
 
         /// Compute the collision manifold between two circles.
-        public static void b2CollideCircles(b2Manifold manifold,
+        public static void b2CollideCircles(ref b2Manifold manifold,
                                b2CircleShape circleA, ref b2Transform xfA,
                                b2CircleShape circleB, ref b2Transform xfB)
         {
@@ -125,7 +125,7 @@ namespace Box2D.Collision
         }
 
         /// Compute the collision manifold between a polygon and a circle.
-        public static void b2CollidePolygonAndCircle(b2Manifold manifold,
+        public static void b2CollidePolygonAndCircle(ref b2Manifold manifold,
                                         b2PolygonShape polygonA, ref b2Transform xfA,
                                         b2CircleShape circleB, ref b2Transform xfB)
         {
@@ -236,7 +236,7 @@ namespace Box2D.Collision
         // Find incident edge
         // Clip
         // The normal points from 1 to 2
-        public static void b2CollidePolygons(b2Manifold manifold,
+        public static void b2CollidePolygons(ref b2Manifold manifold,
                                 b2PolygonShape polyA, ref b2Transform xfA,
                                 b2PolygonShape polyB, ref b2Transform xfB)
         {
@@ -397,7 +397,7 @@ namespace Box2D.Collision
         }
 
         /// Compute the collision manifold between an edge and a circle.
-        public static void b2CollideEdgeAndCircle(b2Manifold manifold,
+        public static void b2CollideEdgeAndCircle(ref b2Manifold manifold,
                                         b2EdgeShape edgeA, ref b2Transform xfA,
                                         b2CircleShape circleB, ref b2Transform xfB)
         {
@@ -525,12 +525,12 @@ namespace Box2D.Collision
         }
 
         /// Compute the collision manifold between an edge and a circle.
-        public static void b2CollideEdgeAndPolygon(b2Manifold manifold,
+        public static void b2CollideEdgeAndPolygon(ref b2Manifold manifold,
                                         b2EdgeShape edgeA, ref b2Transform xfA,
                                         b2PolygonShape polygonB, ref b2Transform xfB)
         {
             b2EPCollider b = new b2EPCollider();
-            b.Collide(manifold, edgeA, ref xfA, polygonB, ref xfB);
+            b.Collide(ref manifold, edgeA, ref xfA, polygonB, ref xfB);
         }
 
         /// Clipping for contact manifolds.
@@ -584,7 +584,7 @@ namespace Box2D.Collision
         /// Determine if two generic shapes overlap.
         public static bool b2TestOverlap(b2Shape shapeA, int indexA,
                              b2Shape shapeB, int indexB,
-                            b2Transform xfA, b2Transform xfB)
+                            ref b2Transform xfA, ref b2Transform xfB)
         {
             b2DistanceInput input = b2DistanceInput.Default;
             input.proxyA = new b2DistanceProxy(shapeA, indexA);

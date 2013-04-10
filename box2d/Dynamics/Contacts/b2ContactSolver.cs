@@ -162,7 +162,7 @@ namespace Box2D.Dynamics.Contacts
                 float radiusB = shapeB.Radius;
                 b2Body bodyA = fixtureA.Body;
                 b2Body bodyB = fixtureB.Body;
-                b2Manifold manifold = contact.GetManifold();
+                b2Manifold manifold = contact.m_manifold;
 
                 int pointCount = manifold.pointCount;
                 Debug.Assert(pointCount > 0);
@@ -238,7 +238,7 @@ namespace Box2D.Dynamics.Contacts
 
                 float radiusA = pc.radiusA;
                 float radiusB = pc.radiusB;
-                b2Manifold manifold = m_contacts[vc.contactIndex].GetManifold();
+                b2Manifold manifold = m_contacts[vc.contactIndex].m_manifold;
 
                 int indexA = vc.indexA;
                 int indexB = vc.indexB;
@@ -269,7 +269,7 @@ namespace Box2D.Dynamics.Contacts
                 xfB.p = cB - b2Math.b2Mul(xfB.q, localCenterB);
 
                 b2WorldManifold worldManifold = new b2WorldManifold();
-                worldManifold.Initialize(manifold, xfA, radiusA, xfB, radiusB);
+                worldManifold.Initialize(ref manifold, xfA, radiusA, xfB, radiusB);
 
                 vc.normal = worldManifold.normal;
 
@@ -703,19 +703,21 @@ namespace Box2D.Dynamics.Contacts
             for (int i = 0; i < m_count; ++i)
             {
                 b2ContactVelocityConstraint vc = m_velocityConstraints[i];
-                b2Manifold manifold = m_contacts[vc.contactIndex].GetManifold();
+                b2Manifold manifold = m_contacts[vc.contactIndex].m_manifold;
 
                 for (int j = 0; j < vc.pointCount; ++j)
                 {
                     manifold.points[j].normalImpulse = vc.points[j].normalImpulse;
                     manifold.points[j].tangentImpulse = vc.points[j].tangentImpulse;
                 }
+
+                m_contacts[vc.contactIndex].m_manifold = manifold;
             }
         }
 
         public class b2PositionSolverManifold
         {
-            public b2PositionSolverManifold(b2ContactPositionConstraint pc, b2Transform xfA, b2Transform xfB, int index)
+            public b2PositionSolverManifold(ref b2ContactPositionConstraint pc, ref b2Transform xfA, ref b2Transform xfB, int index)
             {
                 Debug.Assert(pc.pointCount > 0);
 
@@ -798,7 +800,7 @@ namespace Box2D.Dynamics.Contacts
                     xfA.p = cA - b2Math.b2Mul(xfA.q, localCenterA);
                     xfB.p = cB - b2Math.b2Mul(xfB.q, localCenterB);
 
-                    b2PositionSolverManifold psm = new b2PositionSolverManifold(pc, xfA, xfB, j);
+                    b2PositionSolverManifold psm = new b2PositionSolverManifold(ref pc, ref xfA, ref xfB, j);
                     b2Vec2 normal = psm.normal;
 
                     b2Vec2 point = psm.point;
@@ -888,7 +890,7 @@ namespace Box2D.Dynamics.Contacts
                     xfA.p = cA - b2Math.b2Mul(xfA.q, localCenterA);
                     xfB.p = cB - b2Math.b2Mul(xfB.q, localCenterB);
 
-                    b2PositionSolverManifold psm = new b2PositionSolverManifold(pc, xfA, xfB, j);
+                    b2PositionSolverManifold psm = new b2PositionSolverManifold(ref pc, ref xfA, ref xfB, j);
                     b2Vec2 normal = psm.normal;
 
                     b2Vec2 point = psm.point;
